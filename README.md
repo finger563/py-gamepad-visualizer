@@ -2,6 +2,7 @@
 
 PyQT5 + pygame app for visualizing gamepad inputs
 
+https://github.com/user-attachments/assets/352bb61a-5190-4a73-8208-48c6a754f128
 
 ## Quick Start
 
