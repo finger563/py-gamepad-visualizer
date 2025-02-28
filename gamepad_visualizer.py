@@ -3,8 +3,8 @@ import pygame
 
 try:
     from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout, QHBoxLayout
-    from PyQt5.QtGui import QPixmap, QPainter, QColor, QImage
-    from PyQt5.QtCore import QTimer, Qt, QRect
+    from PyQt5.QtGui import QPixmap, QPainter, QColor, QImage, QFont
+    from PyQt5.QtCore import QTimer, Qt, QRect,QPoint
 except ModuleNotFoundError:
     print("Error: PyQt5 is not installed. Please install it using 'pip install PyQt5'")
     sys.exit(1)
@@ -152,7 +152,17 @@ class GamepadVisualizer(QWidget):
         scale_x = min(scale_x, scale_y)
         scale_y = scale_x
 
+        def draw_text(x, y, text, color=QColor(255, 255, 255)):
+            qp.setPen(color)
+            qp.setBrush(color)
+            # scale the font based on the current scale
+            font_scale = min(scale_x, scale_y)
+            font_size = 12 * font_scale
+            qp.setFont(QFont("Arial", int(font_size)))
+            qp.drawText(int(img_x_offset + x * scale_x), int(img_y_offset + y * scale_y), text)
+
         def draw_element(x, y, w, h, color, shape="ellipse"):
+            qp.setPen(color)
             qp.setBrush(color)
             pos_x = int(img_x_offset + x * scale_x)
             pos_y = int(img_y_offset + y * scale_y)
@@ -162,6 +172,9 @@ class GamepadVisualizer(QWidget):
                 qp.drawEllipse(pos_x, pos_y, width, height)
             else:
                 qp.drawRect(pos_x, pos_y, width, height)
+
+        # draw the text for the joystick info (name, serial number)
+        draw_text(130, 500, f"Gamepad: {self.joystick.get_name()} - {self.joystick.get_guid()}", QColor(255,0,0))
 
         joystick_positions = {
             "left": (115, 210, 30, 30),
